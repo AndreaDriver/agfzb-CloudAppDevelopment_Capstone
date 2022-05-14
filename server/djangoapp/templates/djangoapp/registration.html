@@ -1,11 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    {% load static %}
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-    <body>
-    <!--Add a registration form here -->
-    </body>
+    <head>
+        {% load static %}
+        <meta charset="UTF-8">
+        <title>Registration</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <link href="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.css" rel="stylesheet">
+        <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.js"></script>
+        <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+    
+    </head>
+    <body class="">
+       <!--Add a nav bar here -->
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Best Cars</a>
+                
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                {% if user.is_authenticated %}
+                <li>
+                    <a class="btn btn-link" href="#">{{ user.first_name }}({{ user.username }})</a>
+                    <a class="btn btn-link" href="{% url 'djangoapp:logout' %}">Logout</a>
+                </li>
+                {% else %}
+                
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    
+    
+      <!--Form-->
+      <div class="container-fluid d-flex justify-content-center jumbotron">  
+      <div class="container col-8 bg-light jumbotron">
+        <h1 class="mb-3">Sign Up!</h1>
+        <form action="{% url 'djangoapp:registration' %}" method="POST">
+            {% csrf_token %}
+            <div class="card-columns-vertical">
+                <label for="username"><strong>User Name</strong></label>
+                <input type="text" class="form-control" placeholder="Enter User Name: " name="username" required>
+                <label for="firstname" class="mt-1"><strong>First Name</strong></label>
+                <input type="text" class="form-control" placeholder="Enter First Name: " name="firstname" required>
+                <label for="lastname" class="mt-1"><strong>Last Name</strong></label>
+                <input type="text" class="form-control" placeholder="Enter Last Name: " name="lastname" required>
+                <label for="password" class="mt-1"><strong>Password</strong></label>
+                <input type="password" class="form-control" placeholder="Enter Password: " name="password" required>
+            </div>
+            <div>
+                <button class="btn btn-primary mt-3 rounded-pill btn-lg" type="submit">Sign Up</button>
+        </form>
+
+    </div> 
+</div>
+</body>
+
 </html>
