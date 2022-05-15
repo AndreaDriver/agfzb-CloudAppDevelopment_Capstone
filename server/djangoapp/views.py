@@ -3,12 +3,17 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
+from .models import CarModel, CarMake
 #from .restapis import related methods
+from .restapis import get_dealers_from_cf
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
 import logging
 import json
+from django.core import serializers 
+import uuid
+
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -88,8 +93,11 @@ def registration_request(request):
 
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
-    context = {}
     if request.method == "GET":
+        context = {}
+        url = "https://5b32d086.us-south.apigw.appdomain.cloud/api/dealerships"
+        dealerships = get_dealers_from_cf(url)
+        context["dealership_list"] = dealerships
         return render(request, 'djangoapp/index.html', context)
 
 
