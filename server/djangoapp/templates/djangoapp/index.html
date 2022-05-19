@@ -50,9 +50,9 @@
 
 
     <!--Add a dealer table here -->
-
-    <table class="table table-dark" id="table" data-filter-control="true">
-        <thead >
+<div class="container-fluid mt-5">
+    <table class="table" id="table" data-filter-control="true">
+        <thead class="bg-light" >
             <tr>
                 <th data-field="id">ID</th>
                 <th data-field="full_name">Dealership Name</th>
@@ -76,7 +76,12 @@
             {% endfor %}
         </tbody>
     </table>
-
+</div>
     </body>
+    <script>
+        $(function() {
+          $('#table').bootstrapTable()
+        })
+      </script>
 
 </html>
