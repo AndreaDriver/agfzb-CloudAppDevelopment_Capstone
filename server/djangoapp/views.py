@@ -106,17 +106,18 @@ def get_dealerships(request):
 
 def get_dealer_details(request, id):
     if request.method == "GET":
+        #obtener obj de dealer
         context = {}
         dealer_url = "https://5b32d086.us-south.apigw.appdomain.cloud/api/dealerships"
         dealer = get_dealer_by_id_from_cf(dealer_url, id=id)
         context["dealer"] = dealer
-    
+        #obtener obj reviews del dealer
         review_url = "https://5b32d086.us-south.apigw.appdomain.cloud/api/reviews"
         reviews = get_dealer_reviews_from_cf(review_url, id=id)
-        print(reviews)
         context["reviews"] = reviews
         
         return render(request, 'djangoapp/dealer_details.html', context)
+        
     
 
 
