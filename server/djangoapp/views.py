@@ -48,12 +48,12 @@ def login_request(request):
         if user is not None:
             # Si es user valido, entonces redireccionar a index
             login(request, user)
-            return render(request, 'djangoapp/index.html', context)
+            return redirect('djangoapp:index')
         else:
             # Si es user invalido
-            return render(request, 'djangoapp/index.html', context)
+            return redirect('djangoapp:index')
     else:
-        return render(request, 'djangoapp/index.html', context)
+        return redirect('djangoapp:index')
 
 # Create a `logout_request` view to handle sign out request
 def logout_request(request):
@@ -86,7 +86,7 @@ def registration_request(request):
             # crear user
             user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name, password=password)
             login(request, user)
-            return render(request, 'djangoapp/index.html', context)
+            return redirect("djangoapp:index")
         else:
             return render(request, 'djangoapp/index.html', context)
 
