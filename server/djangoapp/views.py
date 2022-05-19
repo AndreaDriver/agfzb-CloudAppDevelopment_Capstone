@@ -94,13 +94,15 @@ def registration_request(request):
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
     if request.method == "GET":
+        context={}
         url = "https://5b32d086.us-south.apigw.appdomain.cloud/api/dealerships"
         # Get dealers from the URL
         dealerships = get_dealers_from_cf(url)
         # Concat all dealer's short name
-        dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
+        #dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
+        context["dealership_list"]=dealerships
         # Return a list of dealer short name
-        return HttpResponse(dealer_names)
+        return render(request, 'djangoapp/index.html', context)
 
 
 
@@ -137,12 +139,13 @@ def add_review(request, dealer_id):
             "dealer_name": dealer.full_name,
             "cars": CarModel.objects.all()
         }
-        #print(context)
+        print('fgdfgdfgdfgd')
         return render(request, 'djangoapp/add_review.html', context)
     elif request.method == 'POST':
         if (request.user.is_authenticated):
             review = dict()
-            review["id"]=0#placeholder
+            review["id"]=id
+            review["time"] = datetime.utcnow().isoformat()
             review["name"]=request.POST["name"]
             review["dealership"]=dealer_id
             review["review"]=request.POST["content"]
@@ -169,4 +172,5 @@ def add_review(request, dealer_id):
                 context["message"] = "ERROR: Review was not submitted."
             else:
                 context["message"] = "Review was submited"
+        print("adfsdfasdfsadfsdfsdfsdfsdf")
         return redirect("djangoapp:dealer_details", dealer_id=dealer_id)

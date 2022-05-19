@@ -7,12 +7,89 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 
-    <body>
+    <body  style="background-color:#e8ecef;">
 
-    <!--Add a nav bar here -->
+     <!--Add a nav bar here -->
+     <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Best Cars</a>
+                <a class="navbar-brand" href="{% url 'djangoapp:about' %}">About Us</a>
+                <a class="navbar-brand" href="{% url 'djangoapp:contact' %}">Contact Us</a>
+                {% if user.is_authenticated %}
+                <a class="navbar-brand" href="{% url 'djangoapp:add_review' dealer.id %}">Add Review</a>
+                {% endif %}
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                {% if user.is_authenticated %}
+                <li>
+                    <a class="btn btn-link" href="#">{{ user.first_name }}({{ user.username }})</a>
+                    <a class="btn btn-link" href="{% url 'djangoapp:logout' %}">Logout</a>
+                </li>
+                {% else %}
+                <li>
+                    <form class="form-inline" action="{% url 'djangoapp:login' %}" method="post">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Username" name="username" >
+                            <input type="password" class="form-control" placeholder="Password" name="psw" >
+                            <button class="btn btn-primary" type="submit">Login</button>
+                            <a class="btn btn-link rounded-pill" href="{% url 'djangoapp:registration' %}">Sign Up</a>
+                        </div>
+                    </form>
+                </li>
+                {% endif %}
+            </ul>
+            <div class="card">
+    </nav>
 
     <!-- Add reviews as cards -->
+    <div class="container-fluid jumbotron">
+    <h3 class="mb-4">Reviews for <strong>{{dealer.full_name}}</strong></h3>
+    
+    {% if reviews %}
+    <div class="container" id="cardss">
+        
+        <div class="card-deck col-12 ">
+            {% for review in reviews %}
+            <div class="col-4 mt-2">
+                <div class="card ">
+                    {% if review.sentiment == "positive" %}
+                    <img class="card-img-left" src="{{MEDIA_URL}}/emoji/positive.png" width="4.166666666666667vw" height="40px"
+                        alt="Sentiment">
+                    {% elif review.sentiment == "negative" %}
+                    <img class="card-img-left" src="{{MEDIA_URL}}/emoji/negative.png" width="40px" height="40px"
+                        alt="Sentiment">
+                    {% else %}
+                    <img class="card-img-left" src="{{MEDIA_URL}}/emoji/neutral.png" width="40px" height="40px"
+                        alt="Sentiment">
+                    {% endif %}
+                    <div class="card-body bg-light">
+                        {% if review.car_make%}
+                        <h5 class="card-title">{{review.car_make}}, {{review.car_model}} </h5>
+                        <h5 class="card-title">{{review.car_year}}</h5>
+                        {% endif %}
+                        <p class="card-text">{{review.review}}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+    </div>
+    {% else %}
+        <div class="card-body bg-light">
+            <img class="card-img-left" src="{{MEDIA_URL}}/emoji/neutral.png" width="40px" height="40px">
+            <h5 class="card-title">No reviews are available.</h5>
+            <p class="card-text">No reviews have been entered yet. Do you want to be the first?</p>
+        </div>
+    {% endif %}
+</div>
 
-    </body>
+{% if user.is_authenticated %}
+                <a class="navbar-brand" href="{% url 'djangoapp:add_review' dealer.id%}">Add Review</a>
+                {% endif %}
+
 
 </html>
+
