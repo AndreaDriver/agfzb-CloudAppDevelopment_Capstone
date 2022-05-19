@@ -39,7 +39,15 @@ def get_request(url, **kwargs):
 
 # Create a `post_request` to make HTTP POST requests
 # e.g., response = requests.post(url, params=kwargs, json=payload)
-
+def post_request(url, payload, **kwargs):
+    print(kwargs)
+    print("POST to {} ".format(url))
+    print(payload)
+    response = requests.post(url, params=kwargs, json=payload)
+    status_code = response.status_code
+    print("With status {} ".format(status_code))
+    json_data = json.loads(response.text)
+    return json_data
 
 # Create a get_dealers_from_cf method to get dealers from a cloud function
 # def get_dealers_from_cf(url, **kwargs):
@@ -130,15 +138,17 @@ def get_dealer_reviews_from_cf(url, **kwargs):
 # def analyze_review_sentiments(text):
 # - Call get_request() with specified arguments
 # - Get the returned sentiment label such as Positive or Negative
-def analyze_review_sentiments(text): 
-    url = "https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/b916e718-dd11-4cbc-ba5e-17d01c165a7f" 
-    api_key = "1NUoL3nDmppueHNprlq7FxPRap8uNxT3i7QDxRhfRH89" 
-    authenticator = IAMAuthenticator(api_key) 
-    natural_language_understanding = NaturalLanguageUnderstandingV1(version='2021-08-01',authenticator=authenticator) 
-    natural_language_understanding.set_service_url(url) 
-    response = natural_language_understanding.analyze( text=text ,features=Features(sentiment=SentimentOptions(targets=[text]))).get_result() 
-    label=json.dumps(response, indent=2) 
-    label = response['sentiment']['document']['label'] 
-    return(label)
-
+def analyze_review_sentiments(dealerreview, **kwargs):
+    API_KEY="1NUoL3nDmppueHNprlq7FxPRap8uNxT3i7QDxRhfRH89"
+    #API_KEY="0614ccd0-1e9f-4d49-923e-e7741f963747:Q3ZX2R1b3oBEb0XebEO99rpulJ31yoY7X5GfjoQykN4RpM9eThYrrs14If0aOHtG"
+    NLU_URL='https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/b916e718-dd11-4cbc-ba5e-17d01c165a7f'
+    params = json.dumps({"text": dealerreview, "features": {"sentiment": {}}})
+    response = requests.post(NLU_URL,data=params,headers={'Content-Type':'application/json'},auth=HTTPBasicAuth("apikey", API_KEY))
+    
+    #print(response.json())
+    try:
+        sentiment=response.json()['sentiment']['document']['label']
+        return sentiment
+    except:
+        return "neutral"
 
